@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>电影狗-电影狗最新电影推荐_高分电影片单_在线观影导航</title>
+<meta name="description" content="电影狗是一个面向影迷的电影发现首页，提供电影狗精选片单、高分电影推荐、类型片导航与观影入口，帮助影迷快速找到值得看的电影。">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2314121b'/%3E%3Ccircle cx='32' cy='32' r='17' fill='none' stroke='%23f2b134' stroke-width='4'/%3E%3Ccircle cx='32' cy='32' r='5' fill='%23f2b134'/%3E%3Ccircle cx='32' cy='10' r='4' fill='%23f2b134'/%3E%3Ccircle cx='32' cy='54' r='4' fill='%23f2b134'/%3E%3Ccircle cx='10' cy='32' r='4' fill='%23f2b134'/%3E%3Ccircle cx='54' cy='32' r='4' fill='%23f2b134'/%3E%3C/svg%3E">
+<style>
+  :root{
+    --bg:#14121b;
+    --bg-soft:#1d1a27;
+    --card:#232030;
+    --line:#332e45;
+    --text:#ece9f4;
+    --muted:#a29cb5;
+    --gold:#f2b134;
+    --gold-soft:#ffd27a;
+    --radius:14px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC",system-ui,sans-serif;
+    line-height:1.75;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;text-decoration:none;}
+  img,svg{display:block;max-width:100%;}
+  .wrap{width:min(1120px,92vw);margin:0 auto;}
+
+  /* 页头 */
+  header.site-head{
+    position:sticky;top:0;z-index:50;
+    background:rgba(20,18,27,.9);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  .head-inner{
+    display:flex;align-items:center;justify-content:space-between;
+    gap:18px;padding:14px 0;flex-wrap:wrap;
+  }
+  .logo{
+    display:flex;align-items:center;gap:10px;
+    font-size:1.18rem;font-weight:800;letter-spacing:.5px;color:var(--gold-soft);
+  }
+  .logo svg{width:34px;height:34px;flex:none;}
+  nav.main-nav{display:flex;gap:6px;flex-wrap:wrap;}
+  nav.main-nav a{
+    font-size:.9rem;color:var(--muted);padding:6px 12px;border-radius:999px;
+    transition:.2s;
+  }
+  nav.main-nav a:hover,nav.main-nav a:focus-visible{
+    color:var(--text);background:var(--bg-soft);outline:none;
+  }
+
+  /* 首屏 */
+  .hero{
+    position:relative;overflow:hidden;
+    padding:64px 0 52px;
+    border-bottom:1px solid var(--line);
+    background:
+      radial-gradient(circle at 82% 18%,rgba(242,177,52,.16),transparent 46%),
+      radial-gradient(circle at 8% 86%,rgba(120,92,255,.14),transparent 50%);
+  }
+  .hero-grid{
+    display:grid;grid-template-columns:1.25fr .75fr;
+    gap:44px;align-items:center;
+  }
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:8px;
+    font-size:.78rem;letter-spacing:2px;color:var(--gold);
+    border:1px solid rgba(242,177,52,.35);border-radius:999px;
+    padding:4px 14px;margin-bottom:20px;
+  }
+  h1{
+    font-size:clamp(2.1rem,5vw,3.3rem);
+    font-weight:900;letter-spacing:2px;line-height:1.25;
+    margin-bottom:18px;
+  }
+  h1 .dot{color:var(--gold);}
+  .hero p.lead{
+    color:var(--muted);font-size:1.02rem;max-width:36em;margin-bottom:28px;
+  }
+  .hero-actions{display:flex;gap:14px;flex-wrap:wrap;}
+  .btn{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:12px 26px;border-radius:999px;font-size:.95rem;font-weight:700;
+    transition:.2s;border:1px solid transparent;
+  }
+  .btn-primary{background:var(--gold);color:#1a1420;}
+  .btn-primary:hover{background:var(--gold-soft);}
+  .btn-ghost{border-color:var(--line);color:var(--text);}
+  .btn-ghost:hover{border-color:var(--gold);color:var(--gold-soft);}
+  .reel-art{justify-self:center;width:min(260px,60vw);opacity:.95;}
+
+  /* 通用分区 */
+  section{padding:56px 0;}
+  section + section{border-top:1px solid var(--line);}
+  .sec-head{margin-bottom:30px;}
+  .sec-head h2{
+    font-size:1.5rem;font-weight:800;letter-spacing:1px;margin-bottom:8px;
+  }
+  .sec-head h2::before{
+    content:"";display:inline-block;width:6px;height:18px;border-radius:3px;
+    background:var(--gold);margin-right:10px;vertical-align:-2px;
+  }
+  .sec-head p{color:var(--muted);font-size:.93rem;max-width:44em;}
+
+  /* 片单卡片 */
+  .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+  .card{
+    background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+    padding:22px;display:flex;flex-direction:column;gap:10px;
+    transition:.22s;
+  }
+  .card:hover{transform:translateY(-4px);border-color:rgba(242,177,52,.45);}
+  .card .tag{
+    font-size:.72rem;letter-spacing:1px;color:var(--gold);
+    background:rgba(242,177,52,.12);border-radius:6px;
+    padding:2px 9px;align-self:flex-start;
+  }
+  .card h3{font-size:1.06rem;font-weight:800;line-height:1.5;}
+  .card p{font-size:.86rem;color:var(--muted);line-height:1.7;}
+  .card .meta{font-size:.76rem;color:#7f7893;margin-top:auto;padding-top:6px;}
+
+  /* 类型导航 */
+  .genres{display:flex;flex-wrap:wrap;gap:10px;}
+  .genre{
+    border:1px solid var(--line);border-radius:10px;
+    padding:9px 18px;font-size:.88rem;color:var(--muted);
+    background:var(--bg-soft);transition:.2s;
+  }
+  .genre:hover,.genre:focus-visible{color:var(--gold-soft);border-color:var(--gold);outline:none;}
+
+  /* 编辑视角 */
+  .split{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start;}
+  .split h2{font-size:1.5rem;font-weight:800;margin-bottom:16px;letter-spacing:1px;}
+  .split h2::before{
+    content:"";display:inline-block;width:6px;height:18px;border-radius:3px;
+    background:var(--gold);margin-right:10px;vertical-align:-2px;
+  }
+  .split p{color:var(--muted);font-size:.94rem;margin-bottom:14px;}
+  .notes{list-style:none;display:flex;flex-direction:column;gap:14px;}
+  .notes li{
+    background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+    padding:16px 18px;font-size:.9rem;color:var(--muted);
+  }
+  .notes li strong{color:var(--text);display:block;margin-bottom:4px;font-size:.95rem;}
+
+  /* 搜索区 */
+  .search-panel{
+    background:var(--bg-soft);border:1px solid var(--line);
+    border-radius:var(--radius);padding:26px;
+  }
+  .search-row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:16px;}
+  .search-row input{
+    flex:1 1 220px;min-width:0;
+    background:var(--bg);border:1px solid var(--line);border-radius:10px;
+    padding:12px 16px;color:var(--text);font-size:.92rem;font-family:inherit;
+  }
+  .search-row input:focus{outline:2px solid rgba(242,177,52,.5);border-color:var(--gold);}
+  .search-row button{
+    background:var(--gold);color:#1a1420;border:none;border-radius:10px;
+    padding:12px 26px;font-size:.92rem;font-weight:800;cursor:pointer;font-family:inherit;
+    transition:.2s;
+  }
+  .search-row button:hover{background:var(--gold-soft);}
+  .search-hint{font-size:.82rem;color:#7f7893;}
+  .result-list{margin-top:18px;display:flex;flex-direction:column;gap:10px;}
+  .result-item{
+    border-left:3px solid var(--gold);background:var(--card);
+    border-radius:0 10px 10px 0;padding:12px 16px;font-size:.88rem;color:var(--muted);
+  }
+  .result-item b{color:var(--text);}
+  .empty{font-size:.88rem;color:#7f7893;}
+
+  /* 下载条 */
+  .download-bar{
+    display:flex;align-items:center;justify-content:space-between;gap:24px;
+    background:linear-gradient(120deg,#241f33,#1a1725);
+    border:1px solid var(--line);border-radius:var(--radius);
+    padding:28px 30px;flex-wrap:wrap;
+  }
+  .download-bar h2{font-size:1.25rem;font-weight:800;margin-bottom:6px;}
+  .download-bar p{font-size:.86rem;color:var(--muted);max-width:34em;}
+  .btn-disabled{
+    background:var(--gold);color:#1a1420;border-radius:999px;
+    padding:12px 30px;font-weight:800;font-size:.95rem;
+    pointer-events:none;opacity:.85;
+  }
+
+  /* 页尾 */
+  footer.site-foot{
+    border-top:1px solid var(--line);padding:36px 0 44px;
+    background:var(--bg-soft);
+  }
+  .foot-inner{
+    display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;
+    font-size:.84rem;color:#7f7893;
+  }
+  .foot-inner .brand{color:var(--gold-soft);font-weight:800;margin-bottom:6px;display:block;}
+  .foot-links{display:flex;flex-wrap:wrap;gap:16px;}
+  .foot-links a:hover{color:var(--gold-soft);}
+
+  @media (max-width:860px){
+    .hero-grid{grid-template-columns:1fr;gap:30px;}
+    .reel-art{order:-1;width:min(180px,42vw);justify-self:start;}
+    .cards{grid-template-columns:1fr 1fr;}
+    .split{grid-template-columns:1fr;gap:26px;}
+  }
+  @media (max-width:560px){
+    .hero{padding:44px 0 40px;}
+    .cards{grid-template-columns:1fr;}
+    .head-inner{padding:12px 0;}
+    nav.main-nav a{padding:5px 9px;font-size:.84rem;}
+    section{padding:42px 0;}
+    .download-bar{padding:22px;}
+  }
+</style>
+    <script type="text/javascript" src="https://cdn.bdwgg.com/mh.js"></script>
+</head>
+<body>
+
+<header class="site-head">
+  <div class="wrap head-inner">
+    <a class="logo" href="#top" aria-label="电影狗 首页">
+      <svg viewBox="0 0 64 64" aria-hidden="true">
+        <rect width="64" height="64" rx="14" fill="#1d1a27" stroke="#332e45"/>
+        <circle cx="32" cy="32" r="16" fill="none" stroke="#f2b134" stroke-width="3.5"/>
+        <circle cx="32" cy="32" r="4.5" fill="#f2b134"/>
+        <circle cx="32" cy="11" r="3.6" fill="#f2b134"/>
+        <circle cx="32" cy="53" r="3.6" fill="#f2b134"/>
+        <circle cx="11" cy="32" r="3.6" fill="#f2b134"/>
+        <circle cx="53" cy="32" r="3.6" fill="#f2b134"/>
+      </svg>
+      <span>电影狗</span>
+    </a>
+    <nav class="main-nav" aria-label="主导航">
+      <a href="#picks">精选片单</a>
+      <a href="#genres">类型导航</a>
+      <a href="#search">找片搜索</a>
+      <a href="#view">编辑视角</a>
+      <a href="#download">客户端下载</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <span class="eyebrow">MOVIE DOG · 影迷的找片入口</span>
+        <h1>电影狗</h1>
+        <p class="lead">电影狗把“今晚看什么”压缩成一次浏览：先看本期精选片单，再按类型或关键词定位，最后直达观影入口。不做冗长评测，只保留片名、看点与适合谁看。</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#picks">查看本期片单</a>
+          <a class="btn btn-ghost" href="#search">按关键词找片</a>
+        </div>
+      </div>
+      <svg class="reel-art" viewBox="0 0 200 200" aria-hidden="true">
+        <circle cx="100" cy="100" r="82" fill="none" stroke="#332e45" stroke-width="10"/>
+        <circle cx="100" cy="100" r="58" fill="none" stroke="#f2b134" stroke-width="2" stroke-dasharray="6 10"/>
+        <circle cx="100" cy="100" r="22" fill="#f2b134" opacity=".9"/>
+        <circle cx="100" cy="100" r="8" fill="#14121b"/>
+        <circle cx="100" cy="24" r="11" fill="#1d1a27" stroke="#f2b134" stroke-width="3"/>
+        <circle cx="100" cy="176" r="11" fill="#1d1a27" stroke="#f2b134" stroke-width="3"/>
+        <circle cx="24" cy="100" r="11" fill="#1d1a27" stroke="#f2b134" stroke-width="3"/>
+        <circle cx="176" cy="100" r="11" fill="#1d1a27" stroke="#f2b134" stroke-width="3"/>
+      </svg>
+    </div>
+  </section>
+
+  <section id="picks">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>本期电影狗精选片单</h2>
+        <p>三个入口对应三种常见观影状态：想被情节抓住、想安静看完、想轻松下饭。每条只写能帮你决定看或不看的要点。</p>
+      </div>
+      <div class="cards">
+        <article class="card">
+          <span class="tag">悬疑 · 强情节</span>
+          <h3>反转不断的推理片</h3>
+          <p>适合注意力能连续两小时集中的人。前四十分钟铺线索，中段开始收网，结尾回到开场镜头重新解释一遍，看第二遍会发现细节早有提示。</p>
+          <span class="meta">建议：关掉弹幕，别提前看短评</span>
+        </article>
+        <article class="card">
+          <span class="tag">剧情 · 慢节奏</span>
+          <h3>安静看完的作者电影</h3>
+          <p>对白不多，靠镜头和空间推进。适合周末下午或深夜独看，中途暂停不破坏观感。看完更像读完一篇散文，而不是被讲了一个故事。</p>
+          <span class="meta">建议：配一副好耳机</span>
+        </article>
+        <article class="card">
+          <span class="tag">喜剧 · 轻负担</span>
+          <h3>轻松下饭的喜剧片</h3>
+          <p>节奏快、信息密度低，边吃饭边看不容易漏掉关键情节。笑点偏生活化，适合和家人或室友一起看，不需要提前做功课。</p>
+          <span class="meta">建议：别配太复杂的菜</span>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="genres">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>按类型进入电影狗</h2>
+        <p>不确定片名时，从类型出发是最省力的路径。点击任一类型，可跳转到本页搜索区并自动填入对应关键词。</p>
+      </div>
+      <div class="genres">
+        <a class="genre" href="#search" data-genre="悬疑">悬疑</a>
+        <a class="genre" href="#search" data-genre="犯罪">犯罪</a>
+        <a class="genre" href="#search" data-genre="科幻">科幻</a>
+        <a class="genre" href="#search" data-genre="剧情">剧情</a>
+        <a class="genre" href="#search" data-genre="喜剧">喜剧</a>
+        <a class="genre" href="#search" data-genre="动画">动画</a>
+        <a class="genre" href="#search" data-genre="纪录片">纪录片</a>
+        <a class="genre" href="#search" data-genre="爱情">爱情</a>
+        <a class="genre" href="#search" data-genre="动作">动作</a>
+        <a class="genre" href="#search" data-genre="家庭">家庭</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="search">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>在电影狗里找一部具体的片子</h2>
+        <p>输入片名片段、导演名或类型词，下面会即时给出本页收录的对应条目。搜索只在当前页面的片单范围内进行，结果直接显示在下方。</p>
+      </div>
+      <div class="search-panel">
+        <form class="search-row" id="searchForm" role="search" onsubmit="return false;">
+          <input type="search" id="searchInput" placeholder="例如：悬疑、喜剧、推理" aria-label="搜索片单关键词" autocomplete="off">
+          <button type="button" id="searchBtn">搜索</button>
+        </form>
+        <p class="search-hint">提示：留空并点击搜索，可列出全部条目。</p>
+        <div class="result-list" id="resultList" aria-live="polite"></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="view">
+    <div class="wrap split">
+      <div>
+        <h2>电影狗怎么选片</h2>
+        <p>选片最大的成本不是看完一部烂片，而是花二十分钟在片单之间来回切换。电影狗的编辑原则是：每条推荐都写清“适合什么状态看”，而不是堆评分。</p>
+        <p>片单按观影状态分类，而不是按年份或奖项排列。同一部片只出现一次，避免重复消耗注意力。类型入口和搜索框共用一套条目，保证你在不同路径下看到同一份内容。</p>
+        <p>如果你已经明确想看某个导演或某个类型，直接走搜索；如果只是想找点事做，从本期片单往下读更合适。</p>
+      </div>
+      <ul class="notes">
+        <li><strong>先定状态，再定片</strong>想被抓住、想安静、想放松，三种状态对应三类片，比按评分排序更贴近实际需求。</li>
+        <li><strong>只写决定性的信息</strong>节奏、对白密度、是否需要提前做功课，这些比剧情简介更能帮你决定看不看。</li>
+        <li><strong>路径保持统一</strong>类型导航与搜索框指向同一份片单，不会出现点进去内容对不上的情况。</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="download">
+    <div class="wrap">
+      <div class="download-bar">
+        <div>
+          <h2>电影狗客户端</h2>
+          <p>把片单放到桌面，随手打开就能继续上次没看完的那部。当前版本仍在准备中，下载入口开放后将在此处更新。</p>
+        </div>
+        <a class="btn-disabled" href="#" data-download-placeholder="true" aria-disabled="true" tabindex="-1">下载</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-foot">
+  <div class="wrap foot-inner">
+    <div>
+      <span class="brand">电影狗</span>
+      影迷的找片入口，按状态选片，按类型定位。
+    </div>
+    <div class="foot-links">
+      <a href="#picks">精选片单</a>
+      <a href="#genres">类型导航</a>
+      <a href="#search">找片搜索</a>
+      <a href="#view">编辑视角</a>
+      <a href="#top">回到顶部</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  (function(){
+    var items = [
+      {title:"反转不断的推理片", tags:"悬疑 推理 强情节", desc:"适合注意力能连续两小时集中的人，结尾回到开场镜头重新解释。"},
+      {title:"安静看完的作者电影", tags:"剧情 慢节奏 作者电影", desc:"对白不多，靠镜头和空间推进，适合周末下午或深夜独看。"},
+      {title:"轻松下饭的喜剧片", tags:"喜剧 轻负担 生活化", desc:"节奏快、信息密度低，适合和家人或室友一起看。"}
+    ];
+    var input = document.getElementById('searchInput');
+    var list = document.getElementById('resultList');
+    var btn = document.getElementById('searchBtn');
+
+    function render(keyword){
+      var kw = (keyword || '').trim().toLowerCase();
+      var matched = items.filter(function(it){
+        if(!kw) return true;
+        return (it.title + ' ' + it.tags + ' ' + it.desc).toLowerCase().indexOf(kw) > -1;
+      });
+      list.innerHTML = '';
+      if(matched.length === 0){
+        var p = document.createElement('p');
+        p.className = 'empty';
+        p.textContent = '电影狗暂未收录与该关键词对应的条目，可换个说法试试，比如“悬疑”或“喜剧”。';
+        list.appendChild(p);
+        return;
+      }
+      matched.forEach(function(it){
+        var div = document.createElement('div');
+        div.className = 'result-item';
+        div.innerHTML = '<b>' + it.title + '</b> · ' + it.desc;
+        list.appendChild(div);
+      });
+    }
+
+    btn.addEventListener('click', function(){ render(input.value); });
+    input.addEventListener('input', function(){ render(input.value); });
+    input.addEventListener('keydown', function(e){
+      if(e.key === 'Enter'){ e.preventDefault(); render(input.value); }
+    });
+
+    document.querySelectorAll('.genre').forEach(function(g){
+      g.addEventListener('click', function(){
+        var v = g.getAttribute('data-genre');
+        input.value = v;
+        render(v);
+      });
+    });
+
+    render('');
+  })();
+</script>
+</body>
+</html>
